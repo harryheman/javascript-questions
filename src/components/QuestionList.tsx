@@ -18,9 +18,9 @@ import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDeepCompareEffect, useLocalStorage } from 'react-use'
 import { saveResult } from '../actions/results'
+import canSave from '../lib/canSave'
 import type { TQuestions } from '../types'
 import SyntaxHighlighter from './SyntaxHighlighter'
-import canSave from '../lib/canSave'
 
 type Props = {
   questions: TQuestions
@@ -36,7 +36,8 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
     false,
   )
   const [loading, setLoading] = useState(false)
-  const [savingEnabled, setSavingEnabled] = useState<boolean | string>(false)
+  const [savingEnabledOrWorseResultId, setSavingEnabledOrWorseResultId] =
+    useState<boolean | string>(false)
 
   const user = useUser()
 
@@ -85,11 +86,9 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
       correct_answer_percent: correctAnswerPercent,
     })
     if (canSaveOrWorseResultId) {
-      setSavingEnabled(canSaveOrWorseResultId)
+      setSavingEnabledOrWorseResultId(canSaveOrWorseResultId)
     }
   }
-
-  console.log(savingEnabled)
 
   const correctAnswerCount = Object.values(userAnswers || {}).filter(
     ({ correct }) => correct,
@@ -101,7 +100,7 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
     correctAnswerPercent < 50 ? 'red' : correctAnswerPercent > 75 ? 'green' : ''
 
   const handleSaveResult = async () => {
-    if (!user.isSignedIn || !savingEnabled) return
+    if (!user.isSignedIn || !savingEnabledOrWorseResultId) return
     setLoading(true)
     const result = await saveResult(
       {
@@ -113,7 +112,7 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
         correct_answer_count: correctAnswerCount,
         correct_answer_percent: correctAnswerPercent,
       },
-      savingEnabled,
+      savingEnabledOrWorseResultId,
     )
     if (!result) {
       setLoading(false)
@@ -146,7 +145,7 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
         <Button onClick={finishGame} variant='contained' disabled={loading}>
           {gameFinished ? 'Завершить' : 'Проверить'}
         </Button>
-        {gameFinished && user.isSignedIn && savingEnabled && (
+        {gameFinished && user.isSignedIn && savingEnabledOrWorseResultId && (
           <Button
             onClick={handleSaveResult}
             variant='contained'
@@ -237,7 +236,7 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
         <Button onClick={finishGame} variant='contained' disabled={loading}>
           {gameFinished ? 'Завершить' : 'Проверить'}
         </Button>
-        {gameFinished && user.isSignedIn && savingEnabled && (
+        {gameFinished && user.isSignedIn && savingEnabledOrWorseResultId && (
           <Button
             onClick={handleSaveResult}
             variant='contained'

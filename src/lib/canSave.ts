@@ -6,14 +6,11 @@ export default async function canSave(
 ) {
   try {
     const results = await getAllResults()
-    if (!results) return false
-    if (results.length < 100) {
+    if (!results || results.length < 100) {
       return true
     }
 
     const worseResult = results[results.length - 1]
-
-    console.log(worseResult)
 
     if (
       resultData.question_count >= worseResult.question_count &&
