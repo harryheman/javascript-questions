@@ -23,6 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-src/seed.ts
 # Local Netlify folder
 .netlify

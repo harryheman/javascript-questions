@@ -1,26 +1,26 @@
 import { Box } from '@mui/material'
 import CssBaseline from '@mui/material/CssBaseline'
+import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
-import Nav from './components/Nav'
 import { ToastContainer } from 'react-toastify'
-// import seed from './seed'
-// import { useEffect } from 'react'
+import Nav from './components/Nav'
+import seed from './seed'
 
 export default function App() {
-  // useEffect(() => {
-  //   const onKeydown = (e: KeyboardEvent) => {
-  //     if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
-  //       e.preventDefault()
-  //       seed()
-  //     }
-  //   }
+  useEffect(() => {
+    const onKeydown = (e: KeyboardEvent) => {
+      if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault()
+        seed()
+      }
+    }
 
-  //   window.addEventListener('keydown', onKeydown)
+    window.addEventListener('keydown', onKeydown)
 
-  //   return () => {
-  //     window.removeEventListener('keydown', onKeydown)
-  //   }
-  // }, [])
+    return () => {
+      window.removeEventListener('keydown', onKeydown)
+    }
+  }, [])
 
   return (
     <Box
