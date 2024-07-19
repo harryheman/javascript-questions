@@ -13,7 +13,6 @@ import {
   RadioGroup,
   Typography,
 } from '@mui/material'
-import CssBaseline from '@mui/material/CssBaseline'
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDeepCompareEffect, useLocalStorage } from 'react-use'
@@ -39,7 +38,7 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
   const [savingEnabledOrWorseResultId, setSavingEnabledOrWorseResultId] =
     useState<boolean | string>(false)
 
-  const user = useUser()
+  const { user, isSignedIn } = useUser()
 
   useDeepCompareEffect(() => {
     const newAnswers: Record<
@@ -100,14 +99,12 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
     correctAnswerPercent < 50 ? 'red' : correctAnswerPercent > 75 ? 'green' : ''
 
   const handleSaveResult = async () => {
-    if (!user.isSignedIn || !savingEnabledOrWorseResultId) return
+    if (!isSignedIn || !savingEnabledOrWorseResultId) return
     setLoading(true)
     const result = await saveResult(
       {
-        user_id: user.user.id,
-        user_name:
-          user.user.fullName ||
-          `${user.user.firstName} ${user.user.lastName}`.trim(),
+        user_id: user.id,
+        user_name: user.fullName || `${user.firstName} ${user.lastName}`.trim(),
         question_count: questions.length,
         correct_answer_count: correctAnswerCount,
         correct_answer_percent: correctAnswerPercent,
@@ -145,7 +142,7 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
         <Button onClick={finishGame} variant='contained' disabled={loading}>
           {gameFinished ? 'Завершить' : 'Проверить'}
         </Button>
-        {gameFinished && user.isSignedIn && savingEnabledOrWorseResultId && (
+        {gameFinished && isSignedIn && savingEnabledOrWorseResultId && (
           <Button
             onClick={handleSaveResult}
             variant='contained'
@@ -236,7 +233,7 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
         <Button onClick={finishGame} variant='contained' disabled={loading}>
           {gameFinished ? 'Завершить' : 'Проверить'}
         </Button>
-        {gameFinished && user.isSignedIn && savingEnabledOrWorseResultId && (
+        {gameFinished && isSignedIn && savingEnabledOrWorseResultId && (
           <Button
             onClick={handleSaveResult}
             variant='contained'
@@ -247,7 +244,6 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
           </Button>
         )}
       </Box>
-      <CssBaseline />
     </Box>
   )
 }
