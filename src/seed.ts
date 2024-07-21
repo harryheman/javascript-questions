@@ -13,7 +13,7 @@ export default async function seed() {
 
   for (let i = 0; i < 100; i++) {
     const question_count = i + 1
-    const correct_answer_count = Math.floor(Math.random() * question_count)
+    const correct_answer_count = Math.floor(Math.random() * question_count) + 1
     const correct_answer_percent = Math.floor(
       (correct_answer_count / question_count) * 100,
     )

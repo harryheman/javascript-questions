@@ -23,7 +23,7 @@ const columns: MRT_ColumnDef<Result>[] = [
   },
   {
     accessorKey: 'correct_answer_count',
-    header: 'Правильные ответы',
+    header: 'Ответы',
   },
   {
     accessorKey: 'correct_answer_percent',
