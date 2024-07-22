@@ -1,5 +1,5 @@
-import { supabase } from './main'
-import { Result } from './types/index'
+import { supabase } from '../main'
+import { Result } from '../types/index'
 
 export default async function seed() {
   const dataArr: Omit<Result, 'id' | 'created_at'>[] = []

@@ -4,7 +4,8 @@ import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import Nav from './components/Nav'
-import seed from './seed'
+import seed from './lib/seed'
+import clear from './lib/clear'
 
 export default function App() {
   useEffect(() => {
@@ -12,6 +13,11 @@ export default function App() {
       if (e.key === 's' && (e.ctrlKey || e.metaKey)) {
         e.preventDefault()
         seed()
+      }
+
+      if (e.key === 'c' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault()
+        clear()
       }
     }
 
