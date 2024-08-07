@@ -773,12 +773,19 @@ export default [
   {
     question:
       '// module.js\nexport default () => "Hello World!"\nexport const name = "John"\n\n// index.js\nimport * as data from "./module"\n\nconsole.log(data)',
-    answers: ['{ default: function default(), name: "John" }', '{ default: function default() }', '{ default: "Hello World!", name: "John" }', 'глобальный объект module.js'],
+    answers: [
+      '{ default: function default(), name: "John" }',
+      '{ default: function default() }',
+      '{ default: "Hello World!", name: "John" }',
+      'глобальный объект module.js',
+    ],
     correctAnswerIndex: 0,
-    explanation: 'С помощью `import * as name` мы импортируем все экспорты из файла `module.js` в файл `index.js`, создается новый объект `data`. В файле `module.js` имеется два экспорта: экспорт по умолчанию и именованный экспорт. Экспорт по умолчанию - это функция, которая возвращает строку `Hello World!`, а именованный экспорт - это переменная `nam`", которая имеет значение `John`. Объект `data` имеет свойство `default` для экспорта по умолчанию, другие свойства - именованные экспорты и соответствующие значения.',
+    explanation:
+      'С помощью `import * as name` мы импортируем все экспорты из файла `module.js` в файл `index.js`, создается новый объект `data`. В файле `module.js` имеется два экспорта: экспорт по умолчанию и именованный экспорт. Экспорт по умолчанию - это функция, которая возвращает строку `Hello World!`, а именованный экспорт - это переменная `name`", которая имеет значение `John`. Объект `data` имеет свойство `default` для экспорта по умолчанию, другие свойства - именованные экспорты и соответствующие значения.',
   },
   {
-    question: 'class Person {\n  constructor(name) {\n    this.name = name\n  }\n}\n\nconst member = new Person("John")\nconsole.log(typeof member)',
+    question:
+      'class Person {\n  constructor(name) {\n    this.name = name\n  }\n}\n\nconst member = new Person("John")\nconsole.log(typeof member)',
     answers: ['class', 'function', 'object', 'string'],
     correctAnswerIndex: 2,
     explanation:
@@ -1196,13 +1203,20 @@ export default [
   },
   {
     question:
-      "// sum.js\nexport default function sum(x) {\n  return x + x\n}\n\n// index.js\nimport * as sum from './sum'\n/* вызов функции \"sum\" */",
-      answers: ['sum()', 'sum.sum()', 'sum.default()', 'символ `*` может использоваться только при именованном экспорте'],
-      correctAnswerIndex: 2,
-      explanation: 'С помощью символа `*` мы импортируем все экспортируемые из файла сущности, как дефолтные, так и именованные. Если у нас есть такие файлы:\n\n// info.js\nexport const name = "John"\nexport const age = 30\nexport default "I love JavaScript!"\n\n// index.js\nimport * as info from "./info"\nconsole.log(info)\n\nВ консоль будет выведено:\n\n{ default: \"I love JavaScript!\", name: \"John\", age: 30 }\n\nВ данном случае импортированное значение функции `sum` выглядит примерно так:\n\n{ default: function sum(x) { return x + x } }\n\nМы можем вызвать эту функцию посредством `sum.default()`.',
+      '// sum.js\nexport default function sum(x) {\n  return x + x\n}\n\n// index.js\nimport * as sum from \'./sum\'\n/* вызов функции "sum" */',
+    answers: [
+      'sum()',
+      'sum.sum()',
+      'sum.default()',
+      'символ `*` может использоваться только при именованном экспорте',
+    ],
+    correctAnswerIndex: 2,
+    explanation:
+      'С помощью символа `*` мы импортируем все экспортируемые из файла сущности, как дефолтные, так и именованные. Если у нас есть такие файлы:\n\n// info.js\nexport const name = "John"\nexport const age = 30\nexport default "I love JavaScript!"\n\n// index.js\nimport * as info from "./info"\nconsole.log(info)\n\nВ консоль будет выведено:\n\n{ default: "I love JavaScript!", name: "John", age: 30 }\n\nВ данном случае импортированное значение функции `sum` выглядит примерно так:\n\n{ default: function sum(x) { return x + x } }\n\nМы можем вызвать эту функцию посредством `sum.default()`.',
   },
   {
-    question: 'const handler = {\n  set: () => console.log("Added a new property!"),\n  get: () => console.log("Accessed a property!"),\n}\n\nconst person = new Proxy({}, handler)\n\nperson.name = "John"\nperson.name',
+    question:
+      'const handler = {\n  set: () => console.log("Added a new property!"),\n  get: () => console.log("Accessed a property!"),\n}\n\nconst person = new Proxy({}, handler)\n\nperson.name = "John"\nperson.name',
     answers: [
       'Added a new property!',
       'Accessed a property!',
@@ -1284,12 +1298,19 @@ export default [
   {
     question:
       'const person = {\n  name: "John Smith",\n  age: 30\n}\n\nconsole.log([...person])\n// ["John Smith", 30] - как получить такой вывод?',
-    answers: ['объекты являются итерируемыми по умолчанию', '*[Symbol.iterator]() { for (let x in this) yield* this[x] }', '*[Symbol.iterator]() { yield* Object.values(this) }', '*[Symbol.iterator]() { for (let x in this) yield this }'],
+    answers: [
+      'объекты являются итерируемыми по умолчанию',
+      '*[Symbol.iterator]() { for (let x in this) yield* this[x] }',
+      '*[Symbol.iterator]() { yield* Object.values(this) }',
+      '*[Symbol.iterator]() { for (let x in this) yield this }',
+    ],
     correctAnswerIndex: 2,
-    explanation: 'Объекты не являются итерируемыми (перебираемыми) по умолчанию. В итерируемых сущностях имеется протокол итератора. Мы можем реализовать такой протокол вручную, добавив в объект символ итератора (`[Symbol.iterator]`), который будет возвращать объект-генератор. Мы, например, можем преобразовать исходный объект в функцию-генератор с помощью `[Symbol.iterator]() {}`. Эта функция-генератор будет перебирать значения объекта `person`. Если мы хотим вернуть массив `[\'John Smith\', 30]`, то объект должен выглядеть так: `yield* Object.values(this)`.',
+    explanation:
+      "Объекты не являются итерируемыми (перебираемыми) по умолчанию. В итерируемых сущностях имеется протокол итератора. Мы можем реализовать такой протокол вручную, добавив в объект символ итератора (`[Symbol.iterator]`), который будет возвращать объект-генератор. Мы, например, можем преобразовать исходный объект в функцию-генератор с помощью `[Symbol.iterator]() {}`. Эта функция-генератор будет перебирать значения объекта `person`. Если мы хотим вернуть массив `['John Smith', 30]`, то объект должен выглядеть так: `yield* Object.values(this)`.",
   },
   {
-    question: 'let count = 0\nconst nums = [0, 1, 2, 3]\n\nnums.forEach(num => {\n  if (num) count += 1\n})\n\nconsole.log(count)',
+    question:
+      'let count = 0\nconst nums = [0, 1, 2, 3]\n\nnums.forEach(num => {\n  if (num) count += 1\n})\n\nconsole.log(count)',
     answers: ['1', '2', '3', '4'],
     correctAnswerIndex: 2,
     explanation:
@@ -1568,14 +1589,15 @@ export default [
       '`Set` - это объект, представляющий собой коллекцию уникальных значений, поэтому повторяющиеся значения в него не включаются. В то же время, данный объект является чувствительным к регистру, поэтому в коллекцию записываются как `F`, так и `f`.',
   },
   {
-    question:
-      'console.log(NaN === NaN)',
+    question: 'console.log(NaN === NaN)',
     answers: ['true', 'false', 'Error', 'undefined'],
     correctAnswerIndex: 1,
-    explanation: '`NaN` согласно стандарту `IEEE 754` не равен никакому другому значению, включая `NaN`. Еще одной интересной особенностью `NaN` является то, что данное значение представляет собой неправильное, но все-таки число, несмотря на то, что `NaN` расшифровывается как `Not a Number` (не число). Для того, чтобы убедиться в том, что `NaN` - это число, выполните `console.log(typeof NaN)`.',
+    explanation:
+      '`NaN` согласно стандарту `IEEE 754` не равен никакому другому значению, включая `NaN`. Еще одной интересной особенностью `NaN` является то, что данное значение представляет собой неправильное, но все-таки число, несмотря на то, что `NaN` расшифровывается как `Not a Number` (не число). Для того, чтобы убедиться в том, что `NaN` - это число, выполните `console.log(typeof NaN)`.',
   },
   {
-    question: 'const numbers = [1, 2, 3, 4, NaN]\nconsole.log(numbers.indexOf(NaN))',
+    question:
+      'const numbers = [1, 2, 3, 4, NaN]\nconsole.log(numbers.indexOf(NaN))',
     answers: ['4', 'NaN', 'Error', '-1'],
     correctAnswerIndex: 3,
     explanation:
@@ -1925,7 +1947,8 @@ export default [
       'Технически `x` и `y` имеют одинаковые значения. Обе переменные являются пустыми объектами. Однако объекты сравниваются не по значениям. `z` и `x` являются объектами, ссылающимися на одно и то же место в памяти. В `JavaScript` объекты передаются по ссылкам. Поэтому при сравнении `x` и `z` возвращается `true`.',
   },
   {
-    question: 'String.prototype.lengthy = () => {\n  console.log("hello")\n}\n\nlet x = { name: "John" }\n\ndelete x\n\nx.name.lengthy()',
+    question:
+      'String.prototype.lengthy = () => {\n  console.log("hello")\n}\n\nlet x = { name: "John" }\n\ndelete x\n\nx.name.lengthy()',
     answers: ['John', 'hello', 'undefined', 'Error'],
     correctAnswerIndex: 1,
     explanation:
