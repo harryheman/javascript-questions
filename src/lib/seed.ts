@@ -1,15 +1,12 @@
 import { supabase } from '../main'
 import { Result } from '../types/index'
+import clear from './clear'
 
 export default async function seed() {
   const dataArr: Omit<Result, 'id' | 'created_at'>[] = []
 
-  try {
-    await supabase.from('results').delete()
-    console.log('Таблица "results" очищена')
-  } catch (e) {
-    console.error(e)
-  }
+  const success = await clear()
+  if (!success) return
 
   for (let i = 0; i < 100; i++) {
     const question_count = i + 1
@@ -27,7 +24,8 @@ export default async function seed() {
     dataArr.push(data)
   }
   try {
-    await supabase.from('results').insert(dataArr)
+    const { error } = await supabase.from('results').insert(dataArr)
+    if (error) throw error
     console.log('Таблица "results" заполнена фиктивными данными')
   } catch (e) {
     console.error(e)

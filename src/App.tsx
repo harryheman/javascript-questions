@@ -40,8 +40,6 @@ export default function App() {
     },
   })
 
-  console.log(mode)
-
   return (
     <Box
       sx={{

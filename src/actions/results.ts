@@ -7,9 +7,7 @@ export const getAllResults = async () => {
     const { data } = await supabase.from('results').select().returns<Results>()
     if (data && data.length > 0) {
       results = data.sort(
-        (a, b) =>
-          b.question_count - a.question_count ||
-          b.correct_answer_percent - a.correct_answer_percent,
+        (a, b) => b.correct_answer_count - a.correct_answer_count,
       )
     }
   } catch (e) {
@@ -20,15 +18,15 @@ export const getAllResults = async () => {
 
 export const saveResult = async (
   resultData: Omit<Result, 'id' | 'created_at'>,
-  worseResultId: boolean | string,
+  resultId: boolean | string,
 ) => {
   let result = null
   try {
-    if (typeof worseResultId === 'string') {
+    if (typeof resultId === 'string') {
       const { data } = await supabase
         .from('results')
         .update(resultData)
-        .eq('id', worseResultId)
+        .eq('id', resultId)
         .select()
         .returns<Result>()
       result = data

@@ -35,8 +35,9 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
     false,
   )
   const [loading, setLoading] = useState(false)
-  const [savingEnabledOrWorseResultId, setSavingEnabledOrWorseResultId] =
-    useState<boolean | string>(false)
+  const [savingEnabledOrResultId, setSavingEnabledOrResultId] = useState<
+    boolean | string
+  >(false)
 
   const { user, isSignedIn } = useUser()
 
@@ -80,12 +81,9 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
       return resetGame()
     }
     setGameFinished(true)
-    const canSaveOrWorseResultId = await canSave({
-      question_count: questions.length,
-      correct_answer_percent: correctAnswerPercent,
-    })
-    if (canSaveOrWorseResultId) {
-      setSavingEnabledOrWorseResultId(canSaveOrWorseResultId)
+    const canSaveOrResultId = await canSave(correctAnswerCount)
+    if (canSaveOrResultId) {
+      setSavingEnabledOrResultId(canSaveOrResultId)
     }
   }
 
@@ -99,7 +97,7 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
     correctAnswerPercent < 50 ? 'red' : correctAnswerPercent > 75 ? 'green' : ''
 
   const handleSaveResult = async () => {
-    if (!isSignedIn || !savingEnabledOrWorseResultId) return
+    if (!isSignedIn || !savingEnabledOrResultId) return
     setLoading(true)
     const result = await saveResult(
       {
@@ -109,12 +107,12 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
         correct_answer_count: correctAnswerCount,
         correct_answer_percent: correctAnswerPercent,
       },
-      savingEnabledOrWorseResultId,
+      savingEnabledOrResultId,
     )
     if (!result) {
       setLoading(false)
       return toast('При сохранении результата возникла ошибка.', {
-        type: 'success',
+        type: 'error',
       })
     }
     toast('Результат сохранен.', {
@@ -142,7 +140,7 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
         <Button onClick={finishGame} variant='contained' disabled={loading}>
           {gameFinished ? 'Завершить' : 'Проверить'}
         </Button>
-        {gameFinished && isSignedIn && savingEnabledOrWorseResultId && (
+        {gameFinished && isSignedIn && savingEnabledOrResultId && (
           <Button
             onClick={handleSaveResult}
             variant='contained'
@@ -233,7 +231,7 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
         <Button onClick={finishGame} variant='contained' disabled={loading}>
           {gameFinished ? 'Завершить' : 'Проверить'}
         </Button>
-        {gameFinished && isSignedIn && savingEnabledOrWorseResultId && (
+        {gameFinished && isSignedIn && savingEnabledOrResultId && (
           <Button
             onClick={handleSaveResult}
             variant='contained'
