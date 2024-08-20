@@ -153,8 +153,8 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
       </Box>
       {gameFinished && (
         <Typography variant='h6' sx={{ textWrap: 'balance' }} color={color}>
-          Правильных ответов: {correctAnswerPercent}% ({correctAnswerCount} из{' '}
-          {questions.length}).
+          Правильных ответов: {correctAnswerCount} из {questions.length} (
+          {correctAnswerPercent}%).
         </Typography>
       )}
       <Box
@@ -223,8 +223,8 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
       </Box>
       {gameFinished && (
         <Typography variant='h6' sx={{ textWrap: 'balance' }} color={color}>
-          Правильных ответов: {correctAnswerPercent}% ({correctAnswerCount} из{' '}
-          {questions.length}).
+          Правильных ответов: {correctAnswerCount} из {questions.length} (
+          {correctAnswerPercent}%).
         </Typography>
       )}
       <Box sx={{ display: 'flex', gap: 2 }}>
