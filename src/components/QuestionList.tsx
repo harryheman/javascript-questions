@@ -16,7 +16,10 @@ import {
 import { useState } from 'react'
 import { toast } from 'react-toastify'
 import { useDeepCompareEffect, useLocalStorage } from 'react-use'
-import { saveResult } from '../actions/results'
+import { Id } from '../convex/_generated/dataModel'
+import { useCreateResult } from '../hooks/useCreateResult'
+import { useGetResults } from '../hooks/useGetResults'
+import { useUpdateResult } from '../hooks/useUpdateResult'
 import canSave from '../lib/canSave'
 import type { TQuestions } from '../types'
 import SyntaxHighlighter from './SyntaxHighlighter'
@@ -40,6 +43,9 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
   >(false)
 
   const { user, isSignedIn } = useUser()
+  const { data: results } = useGetResults()
+  const { mutate: createResult } = useCreateResult()
+  const { mutate: updateResult } = useUpdateResult()
 
   useDeepCompareEffect(() => {
     const newAnswers: Record<
@@ -81,7 +87,7 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
       return resetGame()
     }
     setGameFinished(true)
-    const canSaveOrResultId = await canSave(correctAnswerCount)
+    const canSaveOrResultId = await canSave(results, correctAnswerCount)
     if (canSaveOrResultId) {
       setSavingEnabledOrResultId(canSaveOrResultId)
     }
@@ -99,25 +105,34 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
   const handleSaveResult = async () => {
     if (!isSignedIn || !savingEnabledOrResultId) return
     setLoading(true)
-    const result = await saveResult(
-      {
-        user_id: user.id,
-        user_name: user.fullName || `${user.firstName} ${user.lastName}`.trim(),
-        question_count: questions.length,
-        correct_answer_count: correctAnswerCount,
-        correct_answer_percent: correctAnswerPercent,
-      },
-      savingEnabledOrResultId,
-    )
-    if (!result) {
-      setLoading(false)
-      return toast('При сохранении результата возникла ошибка.', {
-        type: 'error',
+    let resultId: Id<'results'> | undefined
+    if (typeof savingEnabledOrResultId === 'string') {
+      resultId = await updateResult({
+        id: savingEnabledOrResultId as Id<'results'>,
+        userName: user.fullName || `${user.firstName} ${user.lastName}`.trim(),
+        questionCount: questions.length,
+        correctAnswerCount: correctAnswerCount,
+        correctAnswerPercent: correctAnswerPercent,
+      })
+    } else {
+      resultId = await createResult({
+        userName: user.fullName || `${user.firstName} ${user.lastName}`.trim(),
+        questionCount: questions.length,
+        correctAnswerCount: correctAnswerCount,
+        correctAnswerPercent: correctAnswerPercent,
       })
     }
-    toast('Результат сохранен.', {
+
+    if (!resultId) {
+      toast.error('При сохранении результата возникла ошибка')
+      setLoading(false)
+      return
+    }
+
+    toast('Результат сохранен', {
       type: 'success',
     })
+
     const timeoutId = setTimeout(() => {
       setLoading(false)
       resetGame()

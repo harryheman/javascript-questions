@@ -1,8 +1,10 @@
-import { getAllResults } from '../actions/results'
+import { Doc } from '../convex/_generated/dataModel'
 
-export default async function canSave(correctAnswerCount: number) {
+export default async function canSave(
+  results: Doc<'results'>[],
+  correctAnswerCount: number,
+) {
   try {
-    const results = await getAllResults()
     if (!results || results.length < 100) {
       return true
     }
@@ -10,16 +12,16 @@ export default async function canSave(correctAnswerCount: number) {
     // Находим худший результат
     const worstResult = results[results.length - 1]
 
-    if (correctAnswerCount >= worstResult.correct_answer_count) {
-      return worstResult.id
+    if (correctAnswerCount >= worstResult.correctAnswerCount) {
+      return worstResult._id
     }
 
     // Находим результат с равным количеством правильных ответов
     const sameResult = results.find(
-      (i) => i.correct_answer_count === correctAnswerCount,
+      (i) => i.correctAnswerCount === correctAnswerCount,
     )
     if (sameResult) {
-      return sameResult.id
+      return sameResult._id
     }
   } catch (e) {
     console.error(e)

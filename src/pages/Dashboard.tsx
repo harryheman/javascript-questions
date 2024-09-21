@@ -8,25 +8,24 @@ import {
 import { ruRU } from '@mui/material/locale'
 import { MaterialReactTable, type MRT_ColumnDef } from 'material-react-table'
 import { MRT_Localization_RU } from 'material-react-table/locales/ru'
-import { useEffect, useState } from 'react'
-import { getAllResults } from '../actions/results'
-import type { Result, Results } from '../types'
+import { Doc } from '../convex/_generated/dataModel'
+import { useGetResults } from '../hooks/useGetResults'
 
-const columns: MRT_ColumnDef<Result>[] = [
+const columns: MRT_ColumnDef<Doc<'results'>>[] = [
   {
-    accessorKey: 'user_name',
+    accessorKey: 'userName',
     header: 'Пользователь',
   },
   {
-    accessorKey: 'question_count',
+    accessorKey: 'questionCount',
     header: 'Вопросы',
   },
   {
-    accessorKey: 'correct_answer_count',
+    accessorKey: 'correctAnswerCount',
     header: 'Ответы',
   },
   {
-    accessorKey: 'correct_answer_percent',
+    accessorKey: 'correctAnswerPercent',
     header: 'Процент',
   },
   {
@@ -39,15 +38,11 @@ const columns: MRT_ColumnDef<Result>[] = [
 ]
 
 export default function Dashboard() {
-  const [results, setResults] = useState<Results | null>(null)
-
-  useEffect(() => {
-    getAllResults().then((results) => setResults(results || []))
-  }, [])
+  const { data, isLoading } = useGetResults()
 
   const theme = useTheme()
 
-  if (!results) {
+  if (isLoading) {
     return (
       <Box sx={{ mt: 3 }}>
         <CircularProgress />
@@ -59,7 +54,7 @@ export default function Dashboard() {
     <Box sx={{ width: '100%' }}>
       <ThemeProvider theme={createTheme(theme, ruRU)}>
         <MaterialReactTable
-          data={results}
+          data={data}
           columns={columns}
           localization={MRT_Localization_RU}
         />
