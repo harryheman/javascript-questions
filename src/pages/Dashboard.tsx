@@ -29,7 +29,7 @@ const columns: MRT_ColumnDef<Doc<'results'>>[] = [
     header: 'Процент',
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: '_creationTime',
     header: 'Дата и время',
     Cell: ({ renderedCellValue }) => {
       return new Date(renderedCellValue as string).toLocaleString()
