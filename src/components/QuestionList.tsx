@@ -105,18 +105,20 @@ export default function QuestionList({ questions, setGameStarted }: Props) {
   const handleSaveResult = async () => {
     if (!isSignedIn || !savingEnabledOrResultId) return
     setLoading(true)
+    const userName =
+      user.fullName || `${user.firstName} ${user.lastName}`.trim()
     let resultId: Id<'results'> | undefined
     if (typeof savingEnabledOrResultId === 'string') {
       resultId = await updateResult({
         id: savingEnabledOrResultId as Id<'results'>,
-        userName: user.fullName || `${user.firstName} ${user.lastName}`.trim(),
+        userName,
         questionCount: questions.length,
         correctAnswerCount: correctAnswerCount,
         correctAnswerPercent: correctAnswerPercent,
       })
     } else {
       resultId = await createResult({
-        userName: user.fullName || `${user.firstName} ${user.lastName}`.trim(),
+        userName,
         questionCount: questions.length,
         correctAnswerCount: correctAnswerCount,
         correctAnswerPercent: correctAnswerPercent,
